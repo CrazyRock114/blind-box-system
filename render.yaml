@@ -6,7 +6,6 @@ services:
   - type: web
     name: blindbox-api
     runtime: node
-    plan: standard
     buildCommand: |
       npm ci && cd apps/api && npm ci && npm run build
     startCommand: cd apps/api && npm run start:prod
@@ -73,7 +72,6 @@ services:
   - type: web
     name: blindbox-web
     runtime: static
-    plan: free
     buildCommand: |
       cd apps/web && npm ci && npm run build
     staticPublishPath: apps/web/dist
@@ -92,7 +90,6 @@ services:
   - type: web
     name: blindbox-admin
     runtime: static
-    plan: free
     buildCommand: |
       cd apps/admin && npm ci && npm run build
     staticPublishPath: apps/admin/dist
@@ -110,7 +107,6 @@ services:
   # Redis 缓存服务
   - type: redis
     name: blindbox-redis
-    plan: free
     ipAllowList: []
 
 databases:
@@ -118,7 +114,6 @@ databases:
   - name: blindbox-mysql
     databaseName: blindbox_db
     user: blindbox
-    plan: free
 
 # 环境变量说明 (需要在 Render Dashboard 中手动设置)
 # WECHAT_APP_ID - 微信支付 AppID
