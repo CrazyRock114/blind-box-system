@@ -1,0 +1,33 @@
+{
+  "name": "blind-box-system",
+  "version": "1.0.0",
+  "description": "壹软网络盲盒系统 - 全功能版",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:api": "npm run start:dev --workspace=apps/api",
+    "dev:admin": "npm run dev --workspace=apps/admin",
+    "dev:web": "npm run dev --workspace=apps/web",
+    "build:api": "npm run build --workspace=apps/api",
+    "build:admin": "npm run build --workspace=apps/admin",
+    "build:web": "npm run build --workspace=apps/web",
+    "build": "npm run build:api && npm run build:admin && npm run build:web",
+    "start:api": "npm run start:prod --workspace=apps/api",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:build": "docker-compose build",
+    "db:migrate": "npm run migration:run --workspace=apps/api",
+    "db:generate": "npm run migration:generate --workspace=apps/api",
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present"
+  },
+  "keywords": ["blindbox", "nestjs", "vue", "盲盒"],
+  "author": "AI Studio",
+  "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,89 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: ./apps/api
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_USERNAME=blindbox
+      - DB_PASSWORD=blindbox123
+      - DB_NAME=blindbox_db
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - JWT_SECRET=your-secret-key-change-in-production
+      - WECHAT_APP_ID=${WECHAT_APP_ID}
+      - WECHAT_APP_SECRET=${WECHAT_APP_SECRET}
+      - WECHAT_MCH_ID=${WECHAT_MCH_ID}
+      - WECHAT_MCH_KEY=${WECHAT_MCH_KEY}
+    depends_on:
+      - mysql
+      - redis
+    networks:
+      - blindbox-network
+    restart: always
+
+  mysql:
+    image: mysql:8.0
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root123
+      - MYSQL_DATABASE=blindbox_db
+      - MYSQL_USER=blindbox
+      - MYSQL_PASSWORD=blindbox123
+    volumes:
+      - mysql-data:/var/lib/mysql
+      - ./docker/mysql/init:/docker-entrypoint-initdb.d
+    networks:
+      - blindbox-network
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - blindbox-network
+    restart: always
+
+  admin:
+    build:
+      context: ./apps/admin
+      dockerfile: Dockerfile
+    ports:
+      - "3001:80"
+    depends_on:
+      - api
+    networks:
+      - blindbox-network
+    restart: always
+
+  web:
+    build:
+      context: ./apps/web
+      dockerfile: Dockerfile
+    ports:
+      - "3002:80"
+    depends_on:
+      - api
+    networks:
+      - blindbox-network
+    restart: always
+
+volumes:
+  mysql-data:
+  redis-data:
+
+networks:
+  blindbox-network:
+    driver: bridge
