@@ -14,6 +14,7 @@ import {
 } from 'typeorm';
 import { IchibanPool } from './ichiban-pool.entity';
 import { IchibanQueue } from './ichiban-queue.entity';
+import { IchibanDraw } from './ichiban-draw.entity';
 
 export enum IchibanStatus {
   PENDING = 'pending',    // 待开始
@@ -87,4 +88,7 @@ export class Ichiban {
 
   @OneToMany(() => IchibanQueue, (queue) => queue.ichiban)
   queues: IchibanQueue[];
+
+  @OneToMany(() => IchibanDraw, (draw) => draw.ichiban)
+  draws: IchibanDraw[];
 }

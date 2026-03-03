@@ -1,9 +1,23 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button, Card, Toast, List, Badge, ProgressBar } from 'antd-mobile';
 import { FireFill, GiftOutline } from 'antd-mobile-icons';
 import './LotteryTest.css';
 
-const prizes = [
+interface Prize {
+  id: string;
+  name: string;
+  level: string;
+  weight: number;
+}
+
+interface DrawResult {
+  success: boolean;
+  prize: Prize;
+  guaranteeTriggered: boolean;
+  record: { id: string; createdAt: string };
+}
+
+const prizes: Prize[] = [
   { id: 'p1', name: '一等奖', level: 'A', weight: 10 },
   { id: 'p2', name: '二等奖', level: 'B', weight: 30 },
   { id: 'p3', name: '三等奖', level: 'C', weight: 60 },
@@ -12,13 +26,13 @@ const prizes = [
 
 export default function LotteryTest() {
   const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState<DrawResult[]>([]);
   const [stats, setStats] = useState({ total: 0, aCount: 0, bCount: 0, cCount: 0, normalCount: 0 });
   const [guaranteeState, setGuaranteeState] = useState({ consecutive: 15, levelA: 5, global: 45 });
-  const [lastPrize, setLastPrize] = useState(null);
+  const [lastPrize, setLastPrize] = useState<DrawResult | null>(null);
 
   // 加权随机算法
-  const weightedRandom = () => {
+  const weightedRandom = (): Prize => {
     const totalWeight = prizes.reduce((sum, p) => sum + p.weight, 0);
     let random = Math.random() * totalWeight;
     
@@ -36,7 +50,7 @@ export default function LotteryTest() {
     setLoading(true);
     
     setTimeout(() => {
-      const newResults = [];
+      const newResults: DrawResult[] = [];
       
       for (let i = 0; i < times; i++) {
         const prize = weightedRandom();

@@ -10,6 +10,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { GachaSeries } from './gacha-series.entity';
+import { GachaDraw } from './gacha-draw.entity';
 
 export enum GachaStatus {
   DRAFT = 'draft',
@@ -69,4 +70,7 @@ export class Gacha {
   // 关联
   @OneToMany(() => GachaSeries, (series) => series.gacha)
   series: GachaSeries[];
+
+  @OneToMany(() => GachaDraw, (draw) => draw.gacha)
+  draws: GachaDraw[];
 }

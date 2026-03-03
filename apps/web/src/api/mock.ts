@@ -1,4 +1,4 @@
-import { MockMethod } from 'vite-plugin-mock';
+import type { MockMethod } from 'vite-plugin-mock';
 
 export default [
   // 获取盲盒列表
@@ -38,7 +38,7 @@ export default [
   {
     url: '/api/lottery/draw',
     method: 'post',
-    response: ({ body }) => {
+    response: () => {
       const prizes = [
         { id: 'p1', name: '一等奖', level: 'A', weight: 10 },
         { id: 'p2', name: '二等奖', level: 'B', weight: 30 },

@@ -1,6 +1,6 @@
 /** @format */
 
-export default () => ({
+export const AppConfig = () => ({
   app: {
     name: process.env.APP_NAME || 'BlindBox System',
     env: process.env.NODE_ENV || 'development',

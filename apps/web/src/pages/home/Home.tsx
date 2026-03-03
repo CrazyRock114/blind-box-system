@@ -3,6 +3,19 @@ import { Swiper, List, NavBar, Badge, Button } from 'antd-mobile';
 import { FireFill, GiftOutline, StarFill } from 'antd-mobile-icons';
 import './Home.css';
 
+interface BoxPool {
+  id: string;
+  name: string;
+  description: string;
+  cover: string;
+  type: 'ichiban' | 'tower' | 'gashapon';
+  price: number;
+  status: string;
+  totalTickets?: number;
+  soldTickets?: number;
+  maxFloors?: number;
+}
+
 const banners = [
   { id: 1, image: 'https://picsum.photos/400/200?random=1', title: '一番赏新品上市' },
   { id: 2, image: 'https://picsum.photos/400/200?random=2', title: '爬塔挑战赢大奖' },
@@ -10,8 +23,7 @@ const banners = [
 ];
 
 export default function Home() {
-  const [boxPools, setBoxPools] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [boxPools, setBoxPools] = useState<BoxPool[]>([]);
 
   useEffect(() => {
     // 模拟数据
@@ -49,7 +61,7 @@ export default function Home() {
     ]);
   }, []);
 
-  const getTypeIcon = (type) => {
+  const getTypeIcon = (type: string) => {
     switch (type) {
       case 'ichiban': return <FireFill style={{ color: '#ff4d4f' }} />;
       case 'tower': return <StarFill style={{ color: '#722ed1' }} />;
@@ -58,7 +70,7 @@ export default function Home() {
     }
   };
 
-  const getTypeName = (type) => {
+  const getTypeName = (type: string) => {
     switch (type) {
       case 'ichiban': return '一番赏';
       case 'tower': return '爬塔';
@@ -106,7 +118,7 @@ export default function Home() {
             description={
               <div className="box-desc">
                 <div>{box.description}</div>
-                {box.type === 'ichiban' && (
+                {box.type === 'ichiban' && box.totalTickets !== undefined && box.soldTickets !== undefined && (
                   <div className="ticket-info">
                     剩余: {box.totalTickets - box.soldTickets}/{box.totalTickets} 张
                   </div>
@@ -124,7 +136,7 @@ export default function Home() {
         <Button
           color="primary"
           size="large"
-          onClick={() => window.location.href = '/lottery/test'}
+          onClick={() => { window.location.href = '/lottery/test'; }}
           style={{ width: '100%' }}
         >
           <FireFill /> 概率引擎测试（新）

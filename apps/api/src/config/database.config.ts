@@ -1,6 +1,6 @@
 /** @format */
 
-export default () => ({
+export const DatabaseConfig = () => ({
   database: {
     host: process.env.DB_HOST || 'localhost',
     port: parseInt(process.env.DB_PORT, 10) || 3306,

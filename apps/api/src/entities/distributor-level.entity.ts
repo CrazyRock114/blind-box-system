@@ -52,4 +52,3 @@ export class DistributorLevel {
   @OneToMany(() => Distributor, (distributor) => distributor.distributorLevel)
   distributors: Distributor[];
 }
-}
