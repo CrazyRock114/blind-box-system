@@ -1,0 +1,128 @@
+# Render Blueprint for BlindBox System
+# 一键部署完整盲盒系统到 Render
+
+services:
+  # API 后端服务
+  - type: web
+    name: blindbox-api
+    runtime: node
+    plan: standard
+    buildCommand: |
+      cd apps/api && npm ci && npm run build
+    startCommand: cd apps/api && npm run start:prod
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: DB_HOST
+        fromDatabase:
+          name: blindbox-mysql
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: blindbox-mysql
+          property: port
+      - key: DB_USERNAME
+        fromDatabase:
+          name: blindbox-mysql
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: blindbox-mysql
+          property: password
+      - key: DB_NAME
+        fromDatabase:
+          name: blindbox-mysql
+          property: database
+      - key: REDIS_HOST
+        fromService:
+          type: redis
+          name: blindbox-redis
+          property: host
+      - key: REDIS_PORT
+        fromService:
+          type: redis
+          name: blindbox-redis
+          property: port
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: JWT_REFRESH_SECRET
+        generateValue: true
+      - key: JWT_REFRESH_EXPIRES_IN
+        value: 30d
+      - key: CORS_ORIGIN
+        value: https://blindbox-web.onrender.com,https://blindbox-admin.onrender.com
+      - key: WECHAT_APP_ID
+        sync: false
+      - key: WECHAT_APP_SECRET
+        sync: false
+      - key: WECHAT_MCH_ID
+        sync: false
+      - key: WECHAT_MCH_KEY
+        sync: false
+      - key: WECHAT_NOTIFY_URL
+        value: https://blindbox-api.onrender.com/api/payment/notify
+      - key: OSS_TYPE
+        value: local
+    healthCheckPath: /api/health
+
+  # 用户端前端 (React + Vite)
+  - type: web
+    name: blindbox-web
+    runtime: static
+    plan: starter
+    buildCommand: |
+      cd apps/web && npm ci && npm run build
+    staticPublishPath: apps/web/dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://blindbox-api.onrender.com/api
+    routes:
+      - type: rewrite
+        source: /api/*
+        destination: https://blindbox-api.onrender.com/api/:splat
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+  # 管理后台前端 (Vue3)
+  - type: web
+    name: blindbox-admin
+    runtime: static
+    plan: starter
+    buildCommand: |
+      cd apps/admin && npm ci && npm run build
+    staticPublishPath: apps/admin/dist
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://blindbox-api.onrender.com/api
+    routes:
+      - type: rewrite
+        source: /api/*
+        destination: https://blindbox-api.onrender.com/api/:splat
+      - type: rewrite
+        source: /*
+        destination: /index.html
+
+  # Redis 缓存服务
+  - type: redis
+    name: blindbox-redis
+    plan: free
+    ipAllowList: []
+
+databases:
+  # MySQL 数据库
+  - name: blindbox-mysql
+    databaseName: blindbox_db
+    user: blindbox
+    plan: free
+    mysqlVersion: "8"
+
+# 环境变量说明 (需要在 Render Dashboard 中手动设置)
+# WECHAT_APP_ID - 微信支付 AppID
+# WECHAT_APP_SECRET - 微信支付 AppSecret
+# WECHAT_MCH_ID - 微信支付商户号
+# WECHAT_MCH_KEY - 微信支付 API 密钥
