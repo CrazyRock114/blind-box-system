@@ -1,11 +1,13 @@
 # Render Blueprint for BlindBox System
 # 一键部署完整盲盒系统到 Render
+# ⚠️ 免费方案：PostgreSQL (1GB/90天) + 无Redis + API免费计划
 
 services:
-  # API 后端服务
+  # API 后端服务 - Free计划
   - type: web
     name: blindbox-api
     runtime: node
+    plan: free
     buildCommand: |
       npm ci && cd apps/api && npm ci && npm run build
     startCommand: cd apps/api && npm run start:prod
@@ -16,34 +18,24 @@ services:
         value: 3000
       - key: DB_HOST
         fromDatabase:
-          name: blindbox-mysql
+          name: blindbox-postgres
           property: host
       - key: DB_PORT
         fromDatabase:
-          name: blindbox-mysql
+          name: blindbox-postgres
           property: port
       - key: DB_USERNAME
         fromDatabase:
-          name: blindbox-mysql
+          name: blindbox-postgres
           property: user
       - key: DB_PASSWORD
         fromDatabase:
-          name: blindbox-mysql
+          name: blindbox-postgres
           property: password
       - key: DB_NAME
         fromDatabase:
-          name: blindbox-mysql
+          name: blindbox-postgres
           property: database
-      - key: REDIS_HOST
-        fromService:
-          type: redis
-          name: blindbox-redis
-          property: host
-      - key: REDIS_PORT
-        fromService:
-          type: redis
-          name: blindbox-redis
-          property: port
       - key: JWT_SECRET
         generateValue: true
       - key: JWT_EXPIRES_IN
@@ -104,16 +96,12 @@ services:
         source: /*
         destination: /index.html
 
-  # Redis 缓存服务
-  - type: redis
-    name: blindbox-redis
-    ipAllowList: []
-
 databases:
-  # MySQL 数据库
-  - name: blindbox-mysql
+  # PostgreSQL 数据库 - Free计划 (1GB, 90天)
+  - name: blindbox-postgres
     databaseName: blindbox_db
     user: blindbox
+    plan: free
 
 # 环境变量说明 (需要在 Render Dashboard 中手动设置)
 # WECHAT_APP_ID - 微信支付 AppID
