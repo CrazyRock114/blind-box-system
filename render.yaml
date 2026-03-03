@@ -73,7 +73,7 @@ services:
   - type: web
     name: blindbox-web
     runtime: static
-    plan: starter
+    plan: free
     buildCommand: |
       cd apps/web && npm ci && npm run build
     staticPublishPath: apps/web/dist
@@ -92,7 +92,7 @@ services:
   - type: web
     name: blindbox-admin
     runtime: static
-    plan: starter
+    plan: free
     buildCommand: |
       cd apps/admin && npm ci && npm run build
     staticPublishPath: apps/admin/dist
