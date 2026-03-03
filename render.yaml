@@ -9,7 +9,7 @@ services:
     runtime: node
     plan: free
     buildCommand: |
-      npm ci && cd apps/api && npm ci && npm run build
+      npm ci && cd apps/api && npm ci && npm install @nestjs/cli && npm run build
     startCommand: cd apps/api && npm run start:prod
     envVars:
       - key: NODE_ENV
