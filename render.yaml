@@ -119,7 +119,6 @@ databases:
     databaseName: blindbox_db
     user: blindbox
     plan: free
-    mysqlVersion: "8"
 
 # 环境变量说明 (需要在 Render Dashboard 中手动设置)
 # WECHAT_APP_ID - 微信支付 AppID
