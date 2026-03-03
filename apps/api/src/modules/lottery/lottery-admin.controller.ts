@@ -14,9 +14,9 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
-import { PoolConfigService } from '../config/pool-config.service';
-import { GuaranteeRedisService } from '../guarantee/guarantee-redis.service';
-import { HotUpdatePoolDTO, HotUpdatePrizeDTO } from '../guarantee/guarantee.types';
+import { PoolConfigService } from './config/pool-config.service';
+import { GuaranteeRedisService } from './guarantee/guarantee-redis.service';
+import { HotUpdatePoolDTO, HotUpdatePrizeDTO, GuaranteeType } from './guarantee/guarantee.types';
 
 // 简易管理员Guard
 const AdminGuard = () => (target: any, key?: any, descriptor?: any) => descriptor;
@@ -159,7 +159,7 @@ export class LotteryAdminController {
     @Param('boxPoolId') boxPoolId: string,
     @Param('userId') userId: string,
   ) {
-    const types = ['consecutive', 'level', 'global'] as const;
+    const types = [GuaranteeType.CONSECUTIVE, GuaranteeType.LEVEL, GuaranteeType.GLOBAL];
     const states = await this.guaranteeRedis.batchGetUserStates(userId, boxPoolId, types);
 
     const result: Record<string, any> = {};

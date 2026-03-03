@@ -1,25 +1,9 @@
 {
   "version": 2,
-  "name": "blind-box-system",
-  "buildCommand": "cd web && npm install && npm run build",
-  "outputDirectory": "web/dist",
-  "framework": "vite",
+  "name": "blind-box-lottery-test",
+  "framework": null,
+  "outputDirectory": "dist",
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api/index.js" },
-    { "source": "/admin/(.*)", "destination": "/admin/index.html" },
-    { "source": "/(.*)", "destination": "/web/dist/$1" }
-  ],
-  "headers": [
-    {
-      "source": "/api/(.*)",
-      "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Access-Control-Allow-Methods", "value": "GET,POST,PUT,DELETE,OPTIONS" },
-        { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization" }
-      ]
-    }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
 }

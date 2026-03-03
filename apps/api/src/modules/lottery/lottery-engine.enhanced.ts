@@ -13,8 +13,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
-import { Prize, PrizeLevel } from '../../box/prize.entity';
-import { BoxPool, BoxType } from '../../box/box-pool.entity';
+import { Prize, PrizeLevel } from '../box/prize.entity';
+import { BoxPool, BoxType } from '../box/box-pool.entity';
 import { LotteryRecord, LotteryType, LotteryStatus } from './lottery-record.entity';
 import { GuaranteeRedisService } from './guarantee/guarantee-redis.service';
 import { PoolConfigService } from './config/pool-config.service';

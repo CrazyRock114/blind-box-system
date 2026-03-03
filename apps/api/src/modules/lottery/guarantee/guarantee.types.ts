@@ -3,7 +3,7 @@
  * Phase 2 - 概率引擎核心类型
  */
 
-import { PrizeLevel, Prize } from '../box/prize.entity';
+import { PrizeLevel, Prize } from '../../box/prize.entity';
 import { LotteryRecord } from '../lottery-record.entity';
 
 /**
