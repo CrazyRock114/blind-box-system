@@ -1,8 +1,9 @@
 {
   "version": 2,
-  "name": "blind-box-lottery-test",
   "framework": null,
   "outputDirectory": "dist",
+  "buildCommand": null,
+  "installCommand": null,
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
