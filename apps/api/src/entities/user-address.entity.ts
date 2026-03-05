@@ -12,10 +12,7 @@ import {
 } from 'typeorm';
 import { User } from './user.entity';
 
-export enum AddressType {
-  DEFAULT = 'default',
-  NORMAL = 'normal',
-}
+// AddressType removed - using isDefault boolean instead
 
 @Entity('user_addresses')
 @Index(['userId'])
@@ -48,12 +45,11 @@ export class UserAddress {
   zipCode: string;
 
   @Column({
-    type: 'enum',
-    enum: AddressType,
-    default: AddressType.NORMAL,
-    comment: '地址类型',
+    type: 'boolean',
+    default: false,
+    comment: '是否默认地址',
   })
-  type: AddressType;
+  isDefault: boolean;
 
   @CreateDateColumn({ comment: '创建时间' })
   createdAt: Date;

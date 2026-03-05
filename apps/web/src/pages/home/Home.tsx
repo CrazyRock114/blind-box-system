@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Swiper, List, NavBar, Badge, Button } from 'antd-mobile';
-import { FireFill, GiftOutline, StarFill } from 'antd-mobile-icons';
+import { FireFill, GiftOutline, StarFill, UserOutline } from 'antd-mobile-icons';
 import './Home.css';
 
 interface BoxPool {
@@ -17,48 +17,53 @@ interface BoxPool {
 }
 
 const banners = [
-  { id: 1, image: 'https://picsum.photos/400/200?random=1', title: '一番赏新品上市' },
-  { id: 2, image: 'https://picsum.photos/400/200?random=2', title: '爬塔挑战赢大奖' },
-  { id: 3, image: 'https://picsum.photos/400/200?random=3', title: '扭蛋机限时优惠' },
+  { id: 1, image: 'https://images.unsplash.com/photo-1618336753974-aae8e04506aa?w=800&h=400&fit=crop', title: '一番赏新品上市' },
+  { id: 2, image: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=800&h=400&fit=crop', title: '爬塔挑战赢大奖' },
+  { id: 3, image: 'https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=800&h=400&fit=crop', title: '扭蛋机限时优惠' },
+];
+
+const mockPools: BoxPool[] = [
+  {
+    id: 'ichiban-1',
+    name: '海贼王一番赏',
+    description: 'A赏：路飞手办，B赏：索隆手办',
+    cover: 'https://images.unsplash.com/photo-1618336753974-aae8e04506aa?w=400&h=400&fit=crop',
+    type: 'ichiban',
+    price: 58,
+    status: 'active',
+    totalTickets: 80,
+    soldTickets: 23,
+  },
+  {
+    id: 'tower-1',
+    name: '无尽爬塔',
+    description: '挑战100层，赢取终极大奖',
+    cover: 'https://images.unsplash.com/photo-1538481199705-c710c4e965fc?w=400&h=400&fit=crop',
+    type: 'tower',
+    price: 10,
+    status: 'active',
+    maxFloors: 100,
+  },
+  {
+    id: 'gashapon-1',
+    name: '动漫扭蛋',
+    description: 'SSR概率UP！',
+    cover: 'https://images.unsplash.com/photo-1551103782-8ab07afd45c1?w=400&h=400&fit=crop',
+    type: 'gashapon',
+    price: 15,
+    status: 'active',
+  },
 ];
 
 export default function Home() {
-  const [boxPools, setBoxPools] = useState<BoxPool[]>([]);
+  const [boxPools] = useState<BoxPool[]>(mockPools);
+  const [userBalance, setUserBalance] = useState(1000);
 
   useEffect(() => {
-    // 模拟数据
-    setBoxPools([
-      {
-        id: '1',
-        name: '海贼王一番赏',
-        description: 'A赏：路飞手办，B赏：索隆手办',
-        cover: 'https://picsum.photos/200/200?random=10',
-        type: 'ichiban',
-        price: 58,
-        status: 'active',
-        totalTickets: 80,
-        soldTickets: 23,
-      },
-      {
-        id: '2',
-        name: '无尽爬塔',
-        description: '挑战100层，赢取终极大奖',
-        cover: 'https://picsum.photos/200/200?random=11',
-        type: 'tower',
-        price: 10,
-        status: 'active',
-        maxFloors: 100,
-      },
-      {
-        id: '3',
-        name: '动漫扭蛋',
-        description: 'SSR概率UP！',
-        cover: 'https://picsum.photos/200/200?random=12',
-        type: 'gashapon',
-        price: 15,
-        status: 'active',
-      },
-    ]);
+    const savedBalance = localStorage.getItem('user_balance');
+    if (savedBalance) {
+      setUserBalance(Number(savedBalance));
+    }
   }, []);
 
   const getTypeIcon = (type: string) => {
@@ -79,9 +84,34 @@ export default function Home() {
     }
   };
 
+  const getTypeRoute = (type: string) => {
+    switch (type) {
+      case 'ichiban': return '/ichiban';
+      case 'tower': return '/tower';
+      case 'gashapon': return '/gashapon';
+      default: return '/';
+    }
+  };
+
   return (
     <div className="home-page">
-      <NavBar>盲盒商城</NavBar>
+      <NavBar
+        right={<UserOutline onClick={() => window.location.href = '/profile'} />}
+      >
+        盲盒商城
+      </NavBar>
+      
+      {/* 余额展示 */}
+      <div className="home-balance">
+        <div className="balance-item">
+          <span className="balance-label">余额</span>
+          <span className="balance-value">¥{userBalance}</span>
+        </div>
+        <div className="balance-item">
+          <span className="balance-label">积分</span>
+          <span className="balance-value">{Math.floor(userBalance / 10)}</span>
+        </div>
+      </div>
       
       <Swiper autoplay loop>
         {banners.map(banner => (
@@ -94,11 +124,34 @@ export default function Home() {
         ))}
       </Swiper>
 
-      <div className="category-tabs">
-        <div className="category-item active"><FireFill /> 全部</div>
-        <div className="category-item"><GiftOutline /> 一番赏</div>
-        <div className="category-item"><StarFill /> 爬塔</div>
-        <div className="category-item"><GiftOutline /> 扭蛋</div>
+      {/* 快捷入口 */}
+      <div className="quick-entry">
+        <div className="quick-entry-grid">
+          <div className="entry-item" onClick={() => window.location.href = '/ichiban'}>
+            <div className="entry-icon" style={{ background: 'linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%)' }}>
+              <FireFill />
+            </div>
+            <span className="entry-name">一番赏</span>
+          </div>
+          <div className="entry-item" onClick={() => window.location.href = '/tower'}>
+            <div className="entry-icon" style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' }}>
+              <StarFill />
+            </div>
+            <span className="entry-name">爬塔</span>
+          </div>
+          <div className="entry-item" onClick={() => window.location.href = '/gashapon'}>
+            <div className="entry-icon" style={{ background: 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)' }}>
+              <GiftOutline />
+            </div>
+            <span className="entry-name">扭蛋</span>
+          </div>
+          <div className="entry-item" onClick={() => window.location.href = '/profile'}>
+            <div className="entry-icon" style={{ background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)' }}>
+              <UserOutline />
+            </div>
+            <span className="entry-name">我的</span>
+          </div>
+        </div>
       </div>
 
       <div className="box-list">
@@ -126,7 +179,7 @@ export default function Home() {
               </div>
             }
             extra={<span className="box-price">¥{box.price}</span>}
-            onClick={() => window.location.href = `/box/${box.id}`}
+            onClick={() => window.location.href = getTypeRoute(box.type)}
           />
         ))}
       </div>
@@ -135,11 +188,11 @@ export default function Home() {
       <div style={{ padding: '16px', textAlign: 'center' }}>
         <Button
           color="primary"
-          size="large"
+          fill="outline"
+          size="small"
           onClick={() => { window.location.href = '/lottery/test'; }}
-          style={{ width: '100%' }}
         >
-          <FireFill /> 概率引擎测试（新）
+          概率引擎测试
         </Button>
       </div>
     </div>
