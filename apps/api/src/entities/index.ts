@@ -6,7 +6,7 @@
 
 // 用户相关
 export { User, UserStatus } from './user.entity';
-export { UserAddress, AddressType } from './user-address.entity';
+export { UserAddress } from './user-address.entity';
 export { UserAccount, AccountType } from './user-account.entity';
 export { UserLevel } from './user-level.entity';
 

@@ -16,7 +16,7 @@ import { UserAccount } from '../../entities/user-account.entity';
     JwtModule.register({
       secret: process.env.JWT_SECRET || 'your-secret-key',
       signOptions: {
-        expiresIn: process.env.JWT_EXPIRES_IN || '7d',
+        expiresIn: '7d',
       },
     }),
     TypeOrmModule.forFeature([User, UserAccount]),

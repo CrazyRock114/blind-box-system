@@ -60,13 +60,14 @@ export class AuthService {
 
     const savedUser = await this.userRepository.save(user);
 
-    // 创建用户账户
+    // 创建用户账户（余额账户）
     const userAccount = this.userAccountRepository.create({
       userId: savedUser.id,
+      type: 'balance' as any,
       balance: 0,
-      frozenBalance: 0,
-      totalRecharge: 0,
-      totalConsume: 0,
+      frozen: 0,
+      totalIncome: 0,
+      totalExpense: 0,
     });
     await this.userAccountRepository.save(userAccount);
 
@@ -144,7 +145,7 @@ export class AuthService {
     const accessToken = this.jwtService.sign(payload);
     const refreshToken = this.jwtService.sign(payload, {
       secret: process.env.JWT_REFRESH_SECRET || process.env.JWT_SECRET,
-      expiresIn: process.env.JWT_REFRESH_EXPIRES_IN || '30d',
+      expiresIn: '30d',
     });
 
     return {
