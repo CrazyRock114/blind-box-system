@@ -2,6 +2,8 @@
 
 export const DatabaseConfig = () => ({
   database: {
+    // Supabase PostgreSQL 配置
+    url: process.env.SUPABASE_DATABASE_URL || process.env.DATABASE_URL,
     host: process.env.DB_HOST || 'localhost',
     port: parseInt(process.env.DB_PORT, 10) || 3306,
     username: process.env.DB_USERNAME || 'root',

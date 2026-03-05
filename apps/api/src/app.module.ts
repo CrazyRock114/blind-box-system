@@ -46,6 +46,7 @@ import { LuckyCoin } from './entities/lucky-coin.entity';
 import { SystemConfig } from './entities/system-config.entity';
 
 // 模块
+import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { ProductModule } from './modules/product/product.module';
 import { OrderModule } from './modules/order/order.module';
@@ -75,25 +76,43 @@ const entities = [
       envFilePath: ['.env.local', '.env'],
     }),
 
-    // 数据库模块
+    // 数据库模块 - 使用DATABASE_URL环境变量（Render提供PostgreSQL）
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'mysql',
-        host: configService.get('database.host'),
-        port: configService.get('database.port'),
-        username: configService.get('database.username'),
-        password: configService.get('database.password'),
-        database: configService.get('database.name'),
-        entities: entities,
-        synchronize: configService.get('database.synchronize') === 'true',
-        logging: configService.get('database.logging') === 'true',
-      }),
+      useFactory: (configService: ConfigService) => {
+        // 优先使用DATABASE_URL环境变量（Render自动提供）
+        const databaseUrl = process.env.DATABASE_URL;
+        if (databaseUrl) {
+          return {
+            type: 'postgres',
+            url: databaseUrl,
+            entities: entities,
+            synchronize: configService.get('database.synchronize') === 'true',
+            logging: configService.get('database.logging') === 'true',
+            ssl: {
+              rejectUnauthorized: false, // Render PostgreSQL需要
+            },
+          };
+        }
+        // 本地开发回退到配置
+        return {
+          type: 'mysql',
+          host: configService.get('database.host'),
+          port: configService.get('database.port'),
+          username: configService.get('database.username'),
+          password: configService.get('database.password'),
+          database: configService.get('database.name'),
+          entities: entities,
+          synchronize: configService.get('database.synchronize') === 'true',
+          logging: configService.get('database.logging') === 'true',
+        };
+      },
     }),
 
     // 业务模块
     CommonModule,
+    AuthModule,
     UserModule,
     ProductModule,
     OrderModule,

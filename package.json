@@ -24,10 +24,21 @@
     "lint": "npm run lint --workspaces --if-present",
     "test": "npm run test --workspaces --if-present"
   },
-  "keywords": ["blindbox", "nestjs", "vue", "盲盒"],
+  "keywords": [
+    "blindbox",
+    "nestjs",
+    "vue",
+    "盲盒"
+  ],
   "author": "AI Studio",
   "license": "ISC",
   "engines": {
     "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.98.0",
+    "@upstash/redis": "^1.36.3",
+    "@vercel/node": "^5.6.10",
+    "typescript": "^5.9.3"
   }
 }
