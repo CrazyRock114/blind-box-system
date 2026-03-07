@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Swiper, List, NavBar, Badge } from 'antd-mobile';
-import { FireFill, GiftFill, StarFill } from 'antd-mobile-icons';
-import api from '../api';
-import { BoxPool } from '../types';
+import { FireFill, GiftOutline, StarFill } from 'antd-mobile-icons';
+import api from '../../api';
+import type { BoxPool } from '../../types';
 import './Home.css';
 
 const banners = [
@@ -13,14 +13,12 @@ const banners = [
 
 export default function Home() {
   const [boxPools, setBoxPools] = useState<BoxPool[]>([]);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchBoxPools();
   }, []);
 
   const fetchBoxPools = async () => {
-    setLoading(true);
     try {
       // 调用真实API
       const res: any = await api.get('/boxes');
@@ -32,8 +30,6 @@ export default function Home() {
       }
     } catch (error) {
       console.error('获取盲盒列表失败:', error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -44,9 +40,9 @@ export default function Home() {
       case 'tower':
         return <StarFill style={{ color: '#722ed1' }} />;
       case 'gashapon':
-        return <GiftFill style={{ color: '#52c41a' }} />;
+        return <GiftOutline style={{ color: '#52c41a' }} />;
       default:
-        return <GiftFill />;
+        return <GiftOutline />;
     }
   };
 
@@ -85,20 +81,20 @@ export default function Home() {
           <FireFill /> 全部
         </div>
         <div className="category-item">
-          <GiftFill /> 一番赏
+          <GiftOutline /> 一番赏
         </div>
         <div className="category-item">
           <StarFill /> 爬塔
         </div>
         <div className="category-item">
-          <GiftFill /> 扭蛋
+          <GiftOutline /> 扭蛋
         </div>
       </div>
 
       {/* 盲盒列表 */}
       <div className="box-list">
         <h3 className="section-title">热门盲盒</h3>
-        <List loading={loading}>
+        <List>
           {boxPools.map(box => (
             <List.Item
               key={box.id}
